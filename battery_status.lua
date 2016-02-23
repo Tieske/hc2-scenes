@@ -3,14 +3,13 @@
 %% globals
 --]]
 
-local i = 1;
-local TotalDevices = 40 + 1;
-local errors = 0
-local text = 'Some problems with device ;'
-
 local historyName = "batteryHistory"  -- global name for this data
 local deviceCount = "deviceCount"     -- global name for device count
+local ignoreBelow = 50                -- any battery level below this will be ignored
+local defaultLow = 70                 -- if no battery low available, assume this as lowest
 local deviceOvershoot = 40
+local d = os.date('*t') 
+local dateNow = d.year .. "/" .. d.month .. "/" .. d.day
 
 -- iterates over all devices. `fetch` is a function that gets an `id` and should return the
 -- apropriate value for that device id, or `nil` if it does not belong in the collection
@@ -61,10 +60,51 @@ local devicePropertyIterator = function(propertyName, blankAllowed)
     end)
 end
 
--- gets historic data
+-- gets historic battery data
 local function getHistory()
   
 end
+
+
+-- define tables to hold our data
+-- indexed per device id, subtable containing
+--   - everLow: lowest battery level ever seen (above 50%)
+--   - deadSince: dead since; date
+
+local history = {}  -- loaded history
+local added = {}    -- devices added, not available in the history
+local list = {}
+
+-- check all devices for 'deadness' ;), try revive first
+for id, dead in devicePropertyIterator('dead') do
+  if dead >= "1" then
+    fibaro:wakeUpDeadDevice(i) 
+    fibaro:sleep(5000) --check again in 5 sec 
+    dead = fibaro:getValue(i, 'dead');
+    if dead >= "1" then
+      -- really dead apparently, so record this
+      list[id] = list[id] or {}
+      dev.deadSince = (history[id] or {}).deadSince or dateNow  -- use new date, if no old date available
+    end
+  end
+end
+
+-- check battery status
+for id, level in devicePropertyIterator('batteryLevel') do
+  level = tonumber(level) or 0
+  if level > ignoreBelow then
+    list[id] = list[id] or {}
+    if level < ((history[id] or {}).everLow or 999) then
+      list[id].everLow = level
+    else
+      list[id].everLow = history[id].everLow
+    end
+    -- estimate percentage
+    local low = (list[id].everLow == level and math.min(level,defaultLow)) or list[id].everLow
+    list[id].batteryLevel = math.floor(100*(level-low)/(100-low) + 0.5)
+  end
+end
+
 
 while i < TotalDevices do
   local status = fibaro:getValue(i, 'dead');
