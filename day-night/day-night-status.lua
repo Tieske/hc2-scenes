@@ -23,6 +23,8 @@
 -- ======================
 -- USAGE / CUSTOMIZATIONS
 -- ======================
+-- Configure this scene to run at system start. It will go in an endless loop from there.
+
 -- provide a Name for the global variable. Create this variable 
 -- manually in the variables panel. As a predefined variable, with values
 -- "Day", "Night", and "DeepNight".
