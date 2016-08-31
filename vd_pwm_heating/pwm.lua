@@ -1,6 +1,6 @@
 -- PWM based heating control
 -- =========================
--- Pulse Width Modulation algorythm. It uses an on/off heating system and varies the time
+-- Pulse Width Modulation algorithm. It uses an on/off heating system and varies the time
 -- the heating is on, based on an input percentage and system parameters.
 
 -- enable some debug output for testing

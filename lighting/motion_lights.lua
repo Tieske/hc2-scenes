@@ -1,6 +1,6 @@
 --[[
 %% properties
-562 value
+567 value
 %% events
 %% globals
 --]]
@@ -8,27 +8,30 @@
 -- turns lights on/off based on a set of motion sensors
 -- supports multiple motion sensors and multiple light, both
 -- dimmers and on/off switches.
--- Optionally; can do just switching off automatically
+-- Each device can do on/off, on-only, or off-only.
 
 -- CONFIGURATION
 -- =============
 -- motion sensors; must all be listed above in trigger block!
 local source_devices = { 
-  562,  -- sensor office
+  567,  -- sensor bathroom
 }  
 
 -- lights to dimm, can be both dimmers and on-off switches
 local target_devices = { 
-  236,   -- mainlight office
+  885,   -- bathroom mainlight
+}   
+local target_off_only = {   -- these will be switched off automatically, but not on
+  883,   -- bathrooom mirror light
+}   
+local target_on_only = {    -- these will be switched on automatically, but not off
+--  240,   
 }   
 
 -- How long should the lights stay on. 
 -- NOTE: this is counted after the sensor reports "NO_MOTION" so the sensor delay 
 -- is added to the delay configured here.
 local duration = 240  -- in seconds
-
--- set to `true` to only turn lights OFF at NO_MOTION
-local onlyOff = false
 
 -- on/off value to use for dimmers
 local on_value = 99
@@ -65,21 +68,34 @@ local function motion()
   return false
 end
 
+-- sets a single target
+local function setTarget(id, turnOff)
+  -- for on/off switches and dimmers
+  fibaro:call(id, turnOff and "turnOff" or "turnOn") 
+  
+  -- for dimmers only
+  fibaro:call(id, "setValue", turnOff and off_value or on_value)
+end
+
 -- turns all devices on or off based on the target value
 -- @param turnOff if `true` then all devices will be turned off, otherwise on. 
 local function setValue(turnOff)
   for _, id in ipairs(target_devices) do
-    -- for on/off switches and dimmers
-    fibaro:call(id, turnOff and "turnOff" or "turnOn") 
-    
-    -- for dimmers only
-    fibaro:call(id, "setValue", turnOff and off_value or on_value)
+    setTarget(id, turnOff)
+  end
+  
+  if turnOff then
+    for _, id in ipairs(target_off_only) do
+      setTarget(id, turnOff)
+    end
+  else
+    for _, id in ipairs(target_on_only) do
+      setTarget(id, turnOff)
+    end
   end
 end
 
-if not onlyOff then
-  setValue()      -- turn lights on
-end
+setValue()  -- turn lights on
 
 local time = 0
 local checkDelay = 10 -- in seconds
