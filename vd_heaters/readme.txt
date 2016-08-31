@@ -1,6 +1,6 @@
 Setting this device up;
 
-1. create a vertual device
+1. create a virtual device
   1. id: sliderValue
   2. label: "Stand %"
 2. add a slider first, then a line with 3 buttons
