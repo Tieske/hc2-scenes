@@ -4,9 +4,9 @@
 
 -- list of 3 relays for switching lamellas
 local relays = { 
-  { 809, 812 },
-  { 811, 813 },
-  { 810, 814 },
+  { 809, 812 }, -- ID's for lamella 1 for heater 1 and heater 2
+  { 811, 813 }, -- ID's for lamella 2 for heater 1 and heater 2
+  { 810, 814 }, -- ID's for lamella 3 for heater 1 and heater 2
 } -- device ID's of lamella relays, or subtables if multiple devices
 
 -- List of 4 Icon ID's (list may be empty)

@@ -17,13 +17,13 @@ local GlobalName = "DayNightStatus"
 
 -- This list is only OFF during daylight and on all night
 -- until morning
--- Provide a list with device IDs
+-- Provide a list with device IDs (dimmers or on/off switches)
 local deep_night = { 
   236,   -- mainlight office
 }   
 
 -- This list is OFF during daylight and OFF during deepnight.
--- Provide a list with device IDs
+-- Provide a list with device IDs (dimmers or on/off switches)
 local no_deep_night = { 
   236,   -- mainlight office
 }   

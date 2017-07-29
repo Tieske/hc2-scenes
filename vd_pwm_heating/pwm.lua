@@ -2,6 +2,7 @@
 -- =========================
 -- Pulse Width Modulation algorithm. It uses an on/off heating system and varies the time
 -- the heating is on, based on an input percentage and system parameters.
+-- NOTE: this is NOT a thermostat!
 
 -- enable some debug output for testing
 -- set to true to enable

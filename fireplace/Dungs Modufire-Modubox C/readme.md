@@ -1,5 +1,10 @@
 Configuring a fireplace
 
+Features:
+ - on/off detection of the fireplace
+ - Switching on/off and higher/lower
+ - Reset (not from the UI, only by manually switching the relay)
+
 What's required;
  - connector cable for the fireplace
  - 24v operated relay, switching 230v
@@ -18,6 +23,7 @@ Wiring;
  - connect the fireplace 'down' to the output of B2
 
 Configure devices;
+ - configure all devices to an "off" state after a power failure
  - configure A2, B1 and B2; auto-off parameter to 5 seconds
  - disable A1 in the user interface, as it should only switch on actual state changes
  - configure A1, as a toggle (bi-stable) switch
