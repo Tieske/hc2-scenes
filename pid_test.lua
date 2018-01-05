@@ -67,7 +67,7 @@ end
 function pid:compute(i, t, waspaused)
   self.input = i
   self.target = t or self.target  -- use existing target if omitted
-  assert(self.input and self.target, "You have to sepecify current input and target before running compute()")
+  assert(self.input and self.target, "You have to specify current input and target before running compute()")
   
   -- reset values if PID was paused for prolonged period of time
   if waspaused or self._lasttime == nil or self._lastinput == nil then
